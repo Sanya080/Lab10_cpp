@@ -1,0 +1,78 @@
+// Лабораторна робота №10. Завдання, варіант 7
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+void readText(const char *prompt, char *s)
+{
+    while (true)
+    {
+        cout << prompt;
+        cin.getline(s, 256);
+
+        if (cin.eof())
+        {
+            s[0] = '\0';
+            return;
+        }
+
+        if (cin.fail())
+        {
+            cin.clear();
+            cin.ignore(10000, '\n');
+            cout << "Помилка: текст має містити не більше 255 символів. Спробуйте ще раз." << endl;
+            continue;
+        }
+
+        int len = strlen(s);
+        if (len < 1 || s[len - 1] != '.')
+        {
+            cout << "Помилка: текст має закінчуватися крапкою. Спробуйте ще раз." << endl;
+            continue;
+        }
+
+        s[len - 1] = '\0';
+        return;
+    }
+}
+
+int main()
+{
+    char s1[256];
+    char s2[256];
+    char result[256];
+
+    cout << "З першого рядка видаляються всі символи, що є в другому рядку." << endl;
+    cout << "Кожен рядок вводиться з крапкою в кінці (до 255 символів)." << endl << endl;
+
+    readText("Введіть перший рядок:  ", s1);
+    readText("Введіть другий рядок:  ", s2);
+
+    cout << endl << "Перший рядок:  " << s1 << "." << "  (довжина " << strlen(s1) << ")" << endl;
+    cout << "Другий рядок:  " << s2 << "." << "  (довжина " << strlen(s2) << ")" << endl << endl;
+
+    char *q = result;
+    int removed = 0;
+
+    for (const char *p = s1; *p != '\0'; p++)
+    {
+        if (strchr(s2, *p) == NULL)
+        {
+            *q = *p;
+            q++;
+        }
+        else
+        {
+            removed++;
+        }
+    }
+    *q = '\0';
+
+    cout << "Видалено символів: " << removed << endl;
+    cout << "Результат:  " << result << "." << "  (довжина " << strlen(result) << ")" << endl;
+
+    if (*result == '\0')
+        cout << "(усі символи першого рядка були видалені)" << endl;
+
+    return 0;
+}
